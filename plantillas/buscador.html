@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <title>Mapa de Lugares Cercanos</title>
+    <link rel="stylesheet" href="buscador.css">
+
+</head>
+
+<body>
+    <h1>Mapa de Lugares Cercanos</h1>
+    <input id="pac-input" type="text" placeholder="Buscar lugar">
+    <div id="map"></div>
+    <div id="ubicacion-info"></div>
+
+    <script>
+        
+        let textoUbicacion = ''; // donde se va a guardar la ubicacion 
+        let map;
+
+        function inicializarMapa() {
+            async function cargarMapa() {
+                const position = await new Promise((resolve, reject) => {
+                    navigator.geolocation.getCurrentPosition(resolve, reject);
+                });
+
+                lat = position.coords.latitude;
+                lng = position.coords.longitude;
+
+                map = new google.maps.Map(document.getElementById('map'), {
+                    center: { lat: lat, lng: lng },
+                    zoom: 15
+                });
+
+                const infoWindow = new google.maps.InfoWindow();
+                hobby = localStorage.getItem('hobbySeleccionado');
+                buscarHobby(hobby);
+
+
+                const marker = new google.maps.Marker({
+                    position: { lat: lat, lng: lng },
+                    map: map,
+                    title: 'Tu ubicacion',
+                });
+
+                const input = document.getElementById('pac-input');
+                const searchBox = new google.maps.places.SearchBox(input);
+                map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+                map.addListener('bounds_changed', function () {
+                    searchBox.setBounds(map.getBounds());
+                });
+
+                searchBox.addListener('places_changed', function () {
+                    const places = searchBox.getPlaces();
+
+                    if (places.length === 0) {
+                        return;
+                    }
+
+                    const place = places[0].geometry.location;
+
+                    map.setCenter(place);
+                    map.setZoom(15);
+
+                    // Almacenar el texto de la ubicación en la variable global
+                    textoUbicacion = `<div><strong>${places[0].name}</strong><br>${places[0].formatted_address}</div>`;
+
+                    // Mostrar el texto de la ubicación debajo del mapa
+                    document.getElementById('ubicacion-info').innerHTML = textoUbicacion;
+                });
+            }
+
+            cargarMapa();
+
+            const script = document.createElement('script');
+            script.async = true;
+            script.defer = true;
+            script.src = "https://maps.googleapis.com/maps/api/js?key=AIzaSyB6JTexgUqM9kBvwt2P5GpcmbyM9EZfqzA&callback=cargarMapa&libraries=places";
+            document.head.appendChild(script);
+        }
+        function buscarHobby(name) {
+                service = new google.maps.places.PlacesService(map);
+                service.nearbySearch({
+                    location: { lat: lat, lng: lng }, // Ubicación actual
+                    radius: 1000, // Radio en metros 
+                    name: name
+                }, callback);
+
+    // Marcadores de casas con coordenadas específicas
+// Datos de las casas
+const casas = [
+    {
+        nombre: "Apartamento San Luis 501",
+        latitud: 6.231248,
+        longitud: -75.608864,
+        cuartos: 3,
+        banos: 2,
+        garaje: true,
+        precio: 200000000,
+        estrato: 3
+    },
+    {
+        nombre: "Casa Jerico 3",
+        latitud: 6.228593,
+        longitud: -75.604400,
+        cuartos: 4,
+        banos: 3,
+        garaje: false,
+        precio: 250000000,
+        estrato: 5
+    },
+    {
+        nombre: "Finca Santa Monica 101",
+        latitud: 6.231572,
+        longitud: -75.615953,
+        cuartos: 2,
+        banos: 1,
+        garaje: true,
+        precio: 100000000,
+        estrato: 1
+    },
+    {
+        nombre: "Apartamento Ursula 13",
+        latitud: 6.230524376982704,
+        longitud: -75.58120192233709,
+        cuartos: 3,
+        banos: 3,
+        garaje: false,
+        precio: 270000000,
+        estrato: 2
+    },
+    {
+        nombre: "Apartamento Molinos 9",
+        latitud: 6.224914,
+        longitud: -75.592242,
+        cuartos: 2,
+        banos: 2,
+        garaje: true,
+        precio: 200000000,
+        estrato: 4
+    },
+    {
+        nombre: "Casa Juan Fernando 502",
+        latitud: 6.223737,
+        longitud: -75.605709,
+        cuartos: 4,
+        banos: 3,
+        garaje: false,
+        precio: 250000000,
+        estrato: 5
+    },
+    {
+        nombre: "Apartamento Santa Rosa 113",
+        latitud: 6.198642925115048,
+        longitud: -75.57113006763876,
+        cuartos: 5,
+        banos: 2,
+        garaje: true,
+        precio: 120000000,
+        estrato: 2
+    },
+    {
+        nombre: "Casa Germana 001",
+        latitud: 6.199571,
+        longitud: -75.568995,
+        cuartos: 2,
+        banos: 2,
+        garaje: true,
+        precio: 550000000,
+        estrato: 6
+    },
+    {
+        nombre: "Casa Armenia 8",
+        latitud: 6.193920,
+        longitud:  -75.583522,
+        cuartos: 1,
+        banos: 1,
+        garaje: false,
+        precio: 350000000,
+        estrato: 5
+    },
+    {
+        nombre: "Edificio Firenze Apto 101",
+        latitud: 6.187681,
+        longitud: -75.579381,
+        cuartos: 3,
+        banos: 2,
+        garaje: true,
+        precio: 380000000,
+        estrato: 5
+    },
+    {
+        nombre: "Apartamento Azuleda 201",
+        latitud: 6.189313,
+        longitud: -75.585603,
+        cuartos: 3,
+        banos: 2,
+        garaje: true,
+        precio: 250000000,
+        estrato: 4
+    },
+    {
+        nombre: "Edificio San Diego 11",
+        latitud: 6.231763,
+        longitud: -75.567128,
+        cuartos: 4,
+        banos: 2,
+        garaje: false,
+        precio: 280000000,
+        estrato: 3
+    },
+    {
+        nombre: "Casa La Candelaria 4",
+        latitud: 6.238354,
+        longitud: -75.567858,
+        cuartos: 4,
+        banos: 1,
+        garaje: true,
+        precio: 250000000,
+        estrato: 2
+    },
+    {
+        nombre: "Edificio Firenze Apto 101",
+        latitud: 6.187681,
+        longitud: -75.579381,
+        cuartos: 3,
+        banos: 2,
+        garaje: true,
+        precio: 380000000,
+        estrato: 5
+    },
+    {
+        nombre: "Apartamento Mota 3",
+        latitud: 6.211605,
+        longitud: -75.598927,
+        cuartos: 5,
+        banos: 1,
+        garaje: true,
+        precio: 230000000,
+        estrato: 2
+    },
+    {
+        nombre: "Casa Los Andes 5",
+        latitud: 6.181025,
+        longitud: -75.577695,
+        cuartos: 5,
+        banos: 4,
+        garaje: true,
+        precio: 680000000,
+        estrato: 7
+    },
+    {
+        nombre: "Apartamento Envigado 4023",
+        latitud: 6.1752203641873935,
+        longitud: -75.5893828975352,
+        cuartos: 2,
+        banos: 1,
+        garaje: true,
+        precio: 300000000,
+        estrato: 3
+    },
+    {
+        nombre: "Apto. Villa Hermosa 5",
+        latitud: 6.255337,
+        longitud: -75.553351,
+        cuartos: 3,
+        banos: 1,
+        garaje: true,
+        precio: 180000000,
+        estrato: 2
+    },
+    {
+        nombre: "Casa Roja 23-02",
+        latitud: 6.278129,
+        longitud: -75.566659,
+        cuartos: 2,
+        banos: 2,
+        garaje: true,
+        precio: 170000000,
+        estrato: 2
+    },
+];
+
+    
+  // Crear marcadores para todas las casas dentro de 1 km
+  casas.forEach(casa => {
+        const distancia = calcularDistancia(lat, lng, casa.latitud, casa.longitud);
+        if (distancia <= 1000) { // Si la distancia es menor o igual a 1 km (1000m = 1km)
+            const streetViewUrl = `https://maps.googleapis.com/maps/api/streetview?size=200x200&location=${casa.latitud},${casa.longitud}&key=AIzaSyB6JTexgUqM9kBvwt2P5GpcmbyM9EZfqzA&callback=cargarMapa&libraries=places";`;
+            const contenidoMarcador = `
+                <h3>${casa.nombre}</h3>
+                <p><strong>Cuartos:</strong> ${casa.cuartos}</p>
+                <p><strong>Baños:</strong> ${casa.banos}</p>
+                <p><strong>Garaje:</strong> ${casa.garaje ? 'Sí' : 'No'}</p>
+                <p><strong>Precio:</strong> ${casa.precio}</p>
+                <p><strong>Estrato:</strong> ${casa.estrato}</p>
+                <img src="${streetViewUrl}" alt="Foto de la casa">
+            `;
+
+            const infowindow = new google.maps.InfoWindow({
+                content: contenidoMarcador
+            });
+
+            const marker = new google.maps.Marker({
+                position: { lat: casa.latitud, lng: casa.longitud },
+                map: map,
+                title: casa.nombre,
+                icon: 'http://maps.google.com/mapfiles/ms/icons/blue-dot.png'
+            });
+
+            marker.addListener('click', () => {
+                infowindow.open(map, marker);
+            });
+        }
+    });
+}
+
+// Función para calcular la distancia entre dos puntos geográficos (en metros)
+function calcularDistancia(lat1, lon1, lat2, lon2) {
+    const R = 6371; // Radio de la Tierra en km
+    const dLat = (lat2 - lat1) * Math.PI / 180;
+    const dLon = (lon2 - lon1) * Math.PI / 180;
+    const a = Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+    const d = R * c; // Distancia en km
+    return d * 1000; // Convertir a metros
+}
+
+        function callback(results, status) {
+            if (status === google.maps.places.PlacesServiceStatus.OK) {
+                for (let i = 0; i < results.length; i++) {
+                    console.log(results[i]);
+                    crearMarcador(results[i]);
+                }
+            }
+        }
+        function crearMarcador(place) {
+            
+            const marker = new google.maps.Marker({
+                map: map,
+                position: place.geometry.location,
+                title: place.name,
+                icon: 'http://maps.google.com/mapfiles/ms/icons/green-dot.png'
+
+            });
+            
+
+        }
+
+        
+        inicializarMapa();
+    </script>
+</body>
+
+</html>

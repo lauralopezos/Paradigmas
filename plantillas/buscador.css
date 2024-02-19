@@ -1,0 +1,33 @@
+
+body{
+    
+    background-color: #272525;
+    background-repeat: no-repeat;
+    background-size: cover;
+
+
+}
+body h1{
+    text-align: center;
+    margin: 30px 0;
+    font-style: italic;
+    font-family:sans-serif;
+    color: #ffffff;
+}
+
+#map {
+    height: 400px;
+    width: 100%;
+}
+
+#pac-input {
+    margin-top: 10px;
+    padding: 0 2px;
+    width: 300px;
+    text-overflow: ellipsis;
+}
+
+#ubicacion-info {
+    margin-top: 15px;
+    color: #ffffff;
+}
